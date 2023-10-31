@@ -1,7 +1,19 @@
-﻿namespace IWantApp.Domain.Products;
+﻿using Flunt.Validations;
 
-public class Category: Entity
+namespace IWantApp.Domain.Products;
+
+public class Category : Entity
 {
     public string Name { get; set; }
-    public bool Active { get; set; } = true;
+    public bool Active { get; set; }
+
+    public Category(string name, string createdBy, string editedBy)
+    {
+        Name = name;
+        Active = true;
+        CreatedBy = createdBy;
+        EditedBy = editedBy;
+        CreatedOn = DateTime.Now;
+        EditedOn = DateTime.Now;
+    }
 }
