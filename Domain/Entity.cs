@@ -6,7 +6,7 @@ public abstract class Entity: Notifiable<Notification> // Notifications é do Fl
 {
     public Entity()
     {
-        Id = Guid.NewGuid(); // gera um ID ao instanciar a classe.
+        Id = Guid.NewGuid();
     }
 
     public Guid Id { get; set; }
