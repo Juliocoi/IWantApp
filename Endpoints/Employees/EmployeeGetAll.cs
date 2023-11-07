@@ -10,11 +10,12 @@ public class EmployeeGetAll
     public static Delegate Handle => Action;
 
     [Authorize(Policy = "Employee010Policy")]
-    public static IResult Action(int? page, int? rows, QueryAllUsersWithClaimName query)// o IConfiguration permite acesso às configurações do App.
+    public static async Task<IResult>Action(int? page, int? rows, QueryAllUsersWithClaimName query)// o IConfiguration permite acesso às configurações do App.
     {
         if (page == null) page = 1;
         if (rows == null || rows.Value > 10) rows = 10;
 
-        return Results.Ok(query.Execute(page.Value, rows.Value));
+        var result = await query.Execute(page.Value, rows.Value);
+        return Results.Ok(result);
     }
 }

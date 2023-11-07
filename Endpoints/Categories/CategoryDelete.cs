@@ -10,16 +10,16 @@ public class CategoryDelete
     public static string[] Methods => new string[] { HttpMethod.Delete.ToString() };
     public static Delegate Handle => Action;
 
-    public static IResult Action([FromRoute] Guid Id, ApplicationDbContext context)
+    public static async Task<IResult> Action([FromRoute] Guid Id, ApplicationDbContext context)
     {
         
-        var category = context.Categories.Find(Id);
+        var category = await context.Categories.FindAsync(Id);
 
         if (category == null)
             return Results.NotFound();
-
+  
         context.Remove(category);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         return Results.Ok("Categoria deletada com sucesso");
     }

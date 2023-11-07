@@ -12,18 +12,18 @@ public class CategoryPost
     public static Delegate Handle => Action;
 
     [Authorize(Policy = "EmployeePolicy")]
-    public static IResult Action(CategoryRequest categoryRequest, HttpContext http, ApplicationDbContext context)
+    public static async Task<IResult> Action(CategoryRequest categoryRequest, HttpContext http, ApplicationDbContext context)
     {
         var userId = http.User.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value; // pega o usuário autenticado.
         var category = new Category(categoryRequest.Name, userId, userId);
 
-        if (!category.IsValid) // IsValid é uma propriedade do FLunt
+        if (!category.IsValid) // IsValid é uma vem do FLunt
         {
             return Results.ValidationProblem(category.Notifications.ConvertToPromblemDetails());
         }
 
-        context.Categories.Add(category);
-        context.SaveChanges();
+        await context.Categories.AddAsync(category);
+        await context.SaveChangesAsync();
         return Results.Created($"/categories/{category.Id}", category.Id);
     }
 }
