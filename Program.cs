@@ -1,4 +1,5 @@
 using IWantApp.Endpoints.Categories;
+using IWantApp.Endpoints.Client;
 using IWantApp.Endpoints.Employees;
 using IWantApp.Endpoints.Products;
 using IWantApp.Endpoints.Security;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqlServer<ApplicationDbContext>(
@@ -92,6 +92,9 @@ app.MapMethods(ProductPost.Template, ProductPost.Methods,ProductPost.Handle);
 app.MapMethods(ProductGetAll.Template, ProductGetAll.Methods, ProductGetAll.Handle);
 
 app.MapMethods(ProductGetShowCase.Template, ProductGetShowCase.Methods, ProductGetShowCase.Handle);
+
+app.MapMethods(ClientPost.Template, ClientPost.Methods, ClientPost.Handle);
+app.MapMethods(ClientGetProfile.Templete, ClientGetProfile.Methods, ClientGetProfile.Handle);
 
 app.UseExceptionHandler("/error");
 app.Map("/error", (HttpContext http) =>
