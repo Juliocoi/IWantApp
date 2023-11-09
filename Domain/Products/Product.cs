@@ -10,14 +10,17 @@ public class Product: Entity
     public string Description { get; private set; }
     public bool HasStock { get; private set; }
     public bool Active { get; private set; } = true;
+    public decimal Price { get; private set; }
+
     
     public Product(){ }
 
-    public Product(string name, Category category, string description, bool hasStock, string createdBy)
+    public Product(string name, Category category, string description, bool hasStock, decimal price, string createdBy)
     {
         Name = name;
         Category = category;
         Description = description;
+        Price = price;
         HasStock = hasStock;
         
         CreatedBy = createdBy;
@@ -30,14 +33,15 @@ public class Product: Entity
 
     private void Validate()
     {
-        var contract = new Contract<Category>()
-            .IsNotNullOrEmpty(Name, "Name", "Nome é Obrigatório")
-            .IsGreaterOrEqualsThan(Name, 3, "Name", "O nome deve possuir mais que 3 caracteres")
-            .IsNotNull(Category, "verificar campos obrigatórios.")
-            .IsNotNullOrEmpty(Description, "verificar campos obrigatórios")
-            .IsGreaterOrEqualsThan(Description, 3, "Descrição inválida")
-            .IsNotNullOrEmpty(CreatedBy, "CreatedBy", "Usuário inválido ou nulo")
-            .IsNotNullOrEmpty(EditedBy, "EditedBy", "Alteração inválida, Usuário inválido ou nulo");
+        var contract = new Contract<Product>()
+            .IsNotNullOrEmpty(Name, "Name", "Name is require")
+            .IsGreaterOrEqualsThan(Name, 3, "Name", "The name is too short")
+            .IsNotNull(Category, "Category", "Category not found")
+            .IsNotNullOrEmpty(Description, "Description", "Description is require")
+            .IsGreaterOrEqualsThan(Description, 3, "Description", "Description is too short")
+            .IsNotNullOrEmpty(Price.ToString(),"Price", "The price is invalid")
+            .IsNotNullOrEmpty(CreatedBy, "CreatedBy", "User invalid")
+            .IsNotNullOrEmpty(EditedBy, "EditedBy", "User invalid");
         AddNotifications(contract);
     }
 }

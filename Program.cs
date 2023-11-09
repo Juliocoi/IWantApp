@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqlServer<ApplicationDbContext>(
@@ -95,11 +96,12 @@ app.Map("/error", (HttpContext http) =>
 {
     var error = http.Features?.Get<IExceptionHandlerFeature>()?.Error;
 
-    if(error != null)
+    if (error != null)
     {
-        if(error is SqlException)
+        if (error is SqlException)
             return Results.Problem(title: "Database out", statusCode: 500);
-
+        else if (error is BadHttpRequestException)
+            return Results.Problem(title: "Error to convert data", statusCode: 500);
     }
     return Results.Problem(title: "An error ocurred", statusCode: 500);
 });
