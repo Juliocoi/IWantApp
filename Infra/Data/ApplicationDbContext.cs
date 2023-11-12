@@ -1,4 +1,5 @@
 ﻿using Flunt.Notifications;
+using IWantApp.Domain.Orders;
 using IWantApp.Domain.Products;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -10,6 +11,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser> // como o It
 {// Como nossa classe herda do Identity.Entity, ñ precisamos criar uma propriedade DbSet para gerar a tabela de usuários, o frame fará isso. Após concluir a intalação do FW no projeto, rodar migrations para criar a tabela.
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<Order> Orders{ get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
@@ -28,6 +30,15 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser> // como o It
             
         builder.Entity<Category>()  
             .Property(c => c.Name).IsRequired();
+
+        builder.Entity<Order>()
+            .Property(o => o.ClientId).IsRequired();
+        builder.Entity<Order>()
+            .Property(o => o.DeliveryAddress).IsRequired();
+        builder.Entity<Order>()
+            .HasMany(o => o.Products)
+            .WithMany(p => p.Orders)
+            .UsingEntity(x => x.ToTable("OrderProducts"));
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configuration)

@@ -1,6 +1,7 @@
 using IWantApp.Endpoints.Categories;
 using IWantApp.Endpoints.Client;
 using IWantApp.Endpoints.Employees;
+using IWantApp.Endpoints.Orders;
 using IWantApp.Endpoints.Products;
 using IWantApp.Endpoints.Security;
 using IWantApp.Infra.Data;
@@ -38,6 +39,8 @@ builder.Services.AddAuthorization(options =>
         p.RequireAuthenticatedUser().RequireClaim("EmployeeCode"));
     options.AddPolicy("Employee010Policy", p =>
         p.RequireAuthenticatedUser().RequireClaim("EmployeeCode", "010"));
+    options.AddPolicy("CpfPolicy", p =>
+        p.RequireAuthenticatedUser().RequireClaim("Cpf"));
 });
 
 builder.Services.AddAuthentication(x =>
@@ -92,9 +95,11 @@ app.MapMethods(ProductPost.Template, ProductPost.Methods,ProductPost.Handle);
 app.MapMethods(ProductGetAll.Template, ProductGetAll.Methods, ProductGetAll.Handle);
 
 app.MapMethods(ProductGetShowCase.Template, ProductGetShowCase.Methods, ProductGetShowCase.Handle);
+app.MapMethods(OrderPost.Template, OrderPost.Methods, OrderPost.Handle);
 
 app.MapMethods(ClientPost.Template, ClientPost.Methods, ClientPost.Handle);
 app.MapMethods(ClientGetProfile.Templete, ClientGetProfile.Methods, ClientGetProfile.Handle);
+
 
 app.UseExceptionHandler("/error");
 app.Map("/error", (HttpContext http) =>
